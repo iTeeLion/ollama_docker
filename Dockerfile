@@ -13,13 +13,13 @@ RUN curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | \
 
 RUN apt update && apt install -y nvidia-container-toolkit
 
+RUN useradd -U ollama \
+    && usermod -u $UID ollama \
+    && groupmod -g $GID ollama
+
 RUN mkdir -p /opt/ollama && chmod -R 775 /opt/ollama && chown -R ollama:ollama /opt/ollama
 
 WORKDIR /opt/ollama
-
-RUN useradd -u -U -G ollama ollama \
-    && RUN usermod -u $UID ollama \
-    && groupmod -g $GID ollama
 
 RUN chsh -s /bin/bash ollama
 
