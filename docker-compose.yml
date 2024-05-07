@@ -8,7 +8,7 @@ services:
     volumes:
       - ollama:/root/.ollama
     ports:
-      - '11434:11434'
+      - '${API_PORT:-8081}:11434'
     deploy:
       resources:
         reservations:
@@ -29,7 +29,7 @@ services:
     volumes:
       - open-webui:/app/backend/data
     ports:
-      - ${WEBUI_PORT:-3000}:8080
+      - ${WEBUI_PORT:-8080}:8080
     depends_on:
       - ollama
     environment:
