@@ -6,7 +6,10 @@ services:
       args:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
+    container_name: ollama
     restart: unless-stopped
+    volumes:
+      - ollama:/root/.ollama    
     ports:
       - '11434:11434'
     tty: true
@@ -26,16 +29,16 @@ services:
       dockerfile: Dockerfile
     image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG-main}
     container_name: open-webui
+    restart: unless-stopped
     volumes:
       - open-webui:/app/backend/data
-    depends_on:
-      - ollama
     ports:
       - ${OPEN_WEBUI_PORT-3000}:8080
+    depends_on:
+      - ollama
     environment:
       - 'OLLAMA_BASE_URL=http://ollama:11434'
       - 'WEBUI_SECRET_KEY='
-    restart: unless-stopped
 
 volumes:
   ollama: {}
