@@ -1,18 +1,14 @@
 version: '3.8'
 services:
   ollama:
-    build:
-      context: 'https://raw.githubusercontent.com/iTeeLion/ollama_docker/main/Dockerfile'
-      args:
-        UID: ${UID:-1000}
-        GID: ${GID:-1000}
     container_name: ollama
     restart: unless-stopped
+    image: ollama/ollama
+    tty: true
     volumes:
       - ollama:/root/.ollama
     ports:
       - '11434:11434'
-    tty: true
     deploy:
       resources:
         reservations:
@@ -22,14 +18,14 @@ services:
                 capabilities: [compute, utility]
   
   openwebui:
+    container_name: open-webui
+    restart: unless-stopped
+    image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG-main}
     build:
       context: .
       args:
         OLLAMA_BASE_URL: '/ollama'
       dockerfile: Dockerfile
-    image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG-main}
-    container_name: open-webui
-    restart: unless-stopped
     volumes:
       - open-webui:/app/backend/data
     ports:
@@ -43,4 +39,3 @@ services:
 volumes:
   ollama: {}
   open-webui: {}
-                
